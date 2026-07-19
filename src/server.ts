@@ -22,6 +22,10 @@ app.use('/api/auth', authRoutes);
 app.use('/api/trips', tripRoutes);
 app.use('/api/ai', aiRoutes);
 
+app.get('/', (req, res) => {
+  return res.send("Hello world")
+})
+
 app.use(notFound);
 app.use(errorHandler);
 
