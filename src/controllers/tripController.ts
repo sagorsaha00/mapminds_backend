@@ -60,12 +60,12 @@ export const getTripById = async (req: Request, res: Response) => {
 export const createTrip = async (req: any, res: Response) => {
   try {
     console.log('API Hit: createTrip');
-    console.log('URL Params:', req.params);
+    console.log('URL Params:', req.query);
     console.log('Request Body:', req.body);
 
 
-    const userId = req.params.userId || req.params.id;
-
+    const { userId } = req.query
+    console.log("userId", userId)
     if (!userId) {
       return res.status(400).json({
         message: 'Bad Request. User ID is missing from URL parameters.'
@@ -113,6 +113,9 @@ export const deleteTrip = async (req: AuthRequest, res: Response) => {
   try {
     const trip = await Trip.findById(req.params.id);
     if (!trip) return res.status(404).json({ message: 'Trip not found' });
+    if (trip.createdBy.toString() !== req.user?.id) {
+      return res.status(403).json({ message: 'Not authorized to delete this trip' });
+    }
     await trip.deleteOne();
     res.status(200).json({ message: 'Trip deleted successfully' });
   } catch (error) {
