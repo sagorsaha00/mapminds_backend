@@ -113,9 +113,6 @@ export const deleteTrip = async (req: AuthRequest, res: Response) => {
   try {
     const trip = await Trip.findById(req.params.id);
     if (!trip) return res.status(404).json({ message: 'Trip not found' });
-    if (trip.createdBy.toString() !== req.user?.id) {
-      return res.status(403).json({ message: 'Not authorized to delete this trip' });
-    }
     await trip.deleteOne();
     res.status(200).json({ message: 'Trip deleted successfully' });
   } catch (error) {
